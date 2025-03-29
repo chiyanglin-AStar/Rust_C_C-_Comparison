@@ -37,6 +37,17 @@ fn main() {
     println!("{}", ptr); // Automatically freed when `ptr` goes out of scope
 }
 ```
+```rust
+fn main() {
+    let x = 5;
+    let y = &x;
+    println!("{}",x);
+    println!("{}",y);
+    println!("{}",*y);
+    assert_eq!(5, x);
+    assert_eq!(5, *y);
+}
+```
 
 ### 2. **Null Pointers**
    - **C/C++**: Use of `NULL` or `nullptr`, which can lead to null pointer dereferencing.
