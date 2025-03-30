@@ -390,6 +390,38 @@ fn main() {
     println!("v2: {:?}", v2);
 }
 ```
+## **5️⃣ Null Pointers vs Option Type**
+### **C++ Example (Null Pointer Dereference)**
+```cpp
+#include <iostream>
+
+int* getPointer(bool valid) {
+    if (valid) return new int(10);
+    return nullptr; // Unsafe: null pointer possibility
+}
+
+int main() {
+    int* ptr = getPointer(false);
+    std::cout << *ptr << std::endl; // Segmentation fault
+}
+```
+
+### **Rust Example (Option Type)**
+```rust
+fn get_value(valid: bool) -> Option<i32> {
+    if valid { Some(10) } else { None }
+}
+
+fn main() {
+    match get_value(false) {
+        Some(val) => println!("{}", val),
+        None => println!("No value found"),
+    }
+}
+```
+✅ **Rust eliminates null pointers by using `Option<T>`.**
+
+---
 
 ### 6. **Lifetimes**
    - **C/C++**: No built-in support for tracking the lifetimes of references, which can lead to dangling references.
@@ -425,6 +457,35 @@ fn main() {
     println!("{}", ptr);
 }
 ```
+## **6️⃣ No Implicit Type Casting**
+### **C++ Example (Implicit Casting Can Cause Bugs)**
+```cpp
+#include <iostream>
+
+void printNumber(double num) {
+    std::cout << num << std::endl;
+}
+
+int main() {
+    printNumber(10); // Implicitly converts int to double
+}
+```
+
+### **Rust Example (No Implicit Casting)**
+```rust
+fn print_number(num: f64) {
+    println!("{}", num);
+}
+
+fn main() {
+    let x: i32 = 10;
+    print_number(x as f64); // Must explicitly convert
+}
+```
+✅ **Rust forces explicit type conversion, preventing unintended behavior.**
+
+---
+
 
 ### 7. **Macros**
    - **C/C++**: Preprocessor macros are text-based and can lead to hard-to-debug code.
@@ -458,6 +519,36 @@ fn main() {
     println!("{}", square!(x + 1)); // Outputs 36
 }
 ```
+## **7️⃣ Macros vs Templates**
+### **C++ Example (Templates)**
+```cpp
+#include <iostream>
+
+template <typename T>
+T add(T a, T b) {
+    return a + b;
+}
+
+int main() {
+    std::cout << add(3, 4) << std::endl;
+}
+```
+
+### **Rust Example (Macros)**
+```rust
+macro_rules! add {
+    ($a:expr, $b:expr) => {
+        $a + $b
+    };
+}
+
+fn main() {
+    println!("{}", add!(3, 4));
+}
+```
+✅ **Rust macros allow flexible code generation at compile time.**
+
+---
 
 ### 8. **Immutable by Default**
    - **C/C++**: Variables are mutable by default.
@@ -487,6 +578,29 @@ fn main() {
     println!("{}", y);
 }
 ```
+## **8️⃣ Immutable by Default**
+### **C++ Example (Mutable by Default)**
+```cpp
+#include <iostream>
+
+int main() {
+    int x = 10;
+    x = 20; // Allowed
+    std::cout << x << std::endl;
+}
+```
+
+### **Rust Example (Immutable by Default)**
+```rust
+fn main() {
+    let x = 10;
+    // x = 20; // Error: cannot mutate immutable variable
+    println!("{}", x);
+}
+```
+✅ **Rust variables are immutable by default, ensuring safer code.**
+
+---
 
 ### 9. **Pattern Matching**
    - **C/C++**: Limited support for pattern matching (e.g., `switch` statements).
