@@ -48,6 +48,39 @@ fn main() {
     assert_eq!(5, *y);
 }
 ```
+## **1️⃣ Memory Safety (No Null, No Dangling Pointers)**
+### **C++ Example (Dangling Pointer Issue)**
+```cpp
+#include <iostream>
+using namespace std;
+
+int* getPointer() {
+    int x = 10;
+    return &x; // Returning a pointer to a local variable (undefined behavior)
+}
+
+int main() {
+    int* p = getPointer();
+    cout << *p << endl; // Undefined behavior: accessing a dangling pointer
+}
+```
+
+### **Rust Example (Safe Memory Management)**
+```rust
+fn get_value() -> i32 {
+    let x = 10;
+    x // Ownership ensures safe return
+}
+
+fn main() {
+    let value = get_value();
+    println!("{}", value);
+}
+```
+✅ **Rust prevents returning a reference to a local variable that goes out of scope.**  
+
+---
+
 
 ### 2. **Null Pointers**
    - **C/C++**: Use of `NULL` or `nullptr`, which can lead to null pointer dereferencing.
@@ -88,6 +121,37 @@ fn main() {
     print(ptr); // Safe handling of null-like state
 }
 ```
+
+## **2️⃣ Ownership & Borrowing vs Manual Memory Management**
+### **C++ Example (Manual Memory Management)**
+```cpp
+#include <iostream>
+
+void allocateMemory() {
+    int* ptr = new int(10);
+    std::cout << *ptr << std::endl;
+    delete ptr; // Must manually free memory
+}
+
+int main() {
+    allocateMemory();
+}
+```
+
+### **Rust Example (Ownership & Borrowing)**
+```rust
+fn allocate_memory() {
+    let value = 10; // Rust handles memory automatically
+    println!("{}", value);
+}
+
+fn main() {
+    allocate_memory();
+}
+```
+✅ **Rust’s ownership system prevents memory leaks and use-after-free errors.**
+
+---
 
 ### 3. **Concurrency**
    - **C/C++**: Concurrency is managed using threads, mutexes, and condition variables, which can lead to data races.
@@ -152,6 +216,60 @@ fn main() {
 }
 ```
 
+## **3️⃣ Data Races & Concurrency**
+### **C++ Example (Possible Data Race)**
+```cpp
+#include <iostream>
+#include <thread>
+
+int counter = 0;
+
+void increment() {
+    for (int i = 0; i < 100000; i++) {
+        counter++; // Data race: multiple threads modifying shared memory
+    }
+}
+
+int main() {
+    std::thread t1(increment);
+    std::thread t2(increment);
+    
+    t1.join();
+    t2.join();
+
+    std::cout << counter << std::endl; // Output is unpredictable
+}
+```
+
+### **Rust Example (Safe Concurrency with Mutex)**
+```rust
+use std::sync::{Arc, Mutex};
+use std::thread;
+
+fn main() {
+    let counter = Arc::new(Mutex::new(0));
+
+    let handles: Vec<_> = (0..2).map(|_| {
+        let counter = Arc::clone(&counter);
+        thread::spawn(move || {
+            let mut num = counter.lock().unwrap();
+            for _ in 0..100000 {
+                *num += 1;
+            }
+        })
+    }).collect();
+
+    for handle in handles {
+        handle.join().unwrap();
+    }
+
+    println!("{}", *counter.lock().unwrap()); // Always correct
+}
+```
+✅ **Rust prevents data races at compile time using `Arc<Mutex<T>>`.**
+
+---
+
 ### 4. **Error Handling**
    - **C/C++**: Error handling is typically done using return codes or exceptions.
    - **Rust**: Uses `Result<T, E>` for recoverable errors and `panic!` for unrecoverable errors.
@@ -198,6 +316,47 @@ fn main() {
     }
 }
 ```
+
+## **4️⃣ Error Handling: Exceptions vs Result & Option**
+### **C++ Example (Exceptions)**
+```cpp
+#include <iostream>
+#include <stdexcept>
+
+int divide(int a, int b) {
+    if (b == 0) throw std::runtime_error("Division by zero!");
+    return a / b;
+}
+
+int main() {
+    try {
+        std::cout << divide(10, 0) << std::endl;
+    } catch (const std::exception& e) {
+        std::cout << "Error: " << e.what() << std::endl;
+    }
+}
+```
+
+### **Rust Example (Result Enum)**
+```rust
+fn divide(a: i32, b: i32) -> Result<i32, String> {
+    if b == 0 {
+        Err("Division by zero!".to_string())
+    } else {
+        Ok(a / b)
+    }
+}
+
+fn main() {
+    match divide(10, 0) {
+        Ok(result) => println!("{}", result),
+        Err(e) => println!("Error: {}", e),
+    }
+}
+```
+✅ **Rust forces you to handle errors explicitly, reducing runtime crashes.**
+
+---
 
 ### 5. **Move Semantics**
    - **C++**: Move semantics are introduced in C++11, but they can still lead to use-after-move errors.
