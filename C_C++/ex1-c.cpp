@@ -1,11 +1,12 @@
 #include <iostream>
+using namespace std;
 
-void allocateMemory() {
-    int* ptr = new int(10);
-    std::cout << *ptr << std::endl;
-    delete ptr; // Must manually free memory
+int* getPointer() {
+    int x = 10;
+    return &x; // Returning a pointer to a local variable (undefined behavior)
 }
 
 int main() {
-    allocateMemory();
+    int* p = getPointer();
+    cout << *p << endl; // Undefined behavior: accessing a dangling pointer
 }
