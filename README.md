@@ -1,5 +1,10 @@
 # Rust_C_C-_Comparison
 
+### Smart Pointer 
+
+- [Smart Pointers in C++ geekforgeek](https://www.geeksforgeeks.org/smart-pointers-cpp/)
+- [Smart Pointer in C++](https://medium.com/@lulululu_ej/smart-pointer-in-c-58d55dbace1f)
+
 # **🚀 Summary of Key Differences**
 | Feature              | C/C++ | Rust |
 |----------------------|-------|------|
