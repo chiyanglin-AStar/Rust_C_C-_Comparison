@@ -1,15 +1,11 @@
 #include <iostream>
 
-void print(int* ptr) {
-    if (ptr) {
-        std::cout << *ptr << std::endl;
-    } else {
-        std::cout << "Pointer is null" << std::endl;
-    }
+void allocateMemory() {
+    int* ptr = new int(10);
+    std::cout << *ptr << std::endl;
+    delete ptr; // Must manually free memory
 }
 
 int main() {
-    int* ptr = nullptr;
-    print(ptr); // Potential null pointer dereference
-    return 0;
+    allocateMemory();
 }
